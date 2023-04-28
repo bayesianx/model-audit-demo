@@ -3,6 +3,7 @@ from functionalities.risks import KDE, SHAPEvaluator
 from functionalities.load_data import load_data, fit_model
 from functionalities.plot_data import *
 from st_pages import Page, show_pages, add_page_title
+from PIL import Image
 
 st.set_page_config(layout="wide", 
                    page_title="Model Audit", 
@@ -19,7 +20,7 @@ local_css("style/style.css")
 # should be
 show_pages(
     [
-        Page("app.py", "Model Audit", ":chart_with_upwards_trend:"),
+        Page("app.py", "Model Audit", icon=":chart_with_upwards_trend:"),
         Page("pages/page2.py", "Explainability", ":mag:"),
     ]
 )
