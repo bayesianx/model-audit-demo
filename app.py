@@ -16,6 +16,8 @@ def local_css(file_name):
 
 local_css("style/style.css")
 
+st.sidebar.image("./icons/logo.png", use_column_width=True)
+
 # Specify what pages should be shown in the sidebar, and what their titles and icons
 # should be
 show_pages(
