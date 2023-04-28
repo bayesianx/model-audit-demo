@@ -1,0 +1,14 @@
+.right-sub {
+    text-align: center;
+    font-size: larger;
+}
+
+.left-sub {
+    text-align: center;
+    font-size: larger;
+    position: absolute;
+    position: relative;
+    flex: 1 1 0%;
+    margin-left: calc(11rem);
+    margin-bottom: calc(2rem);
+}
