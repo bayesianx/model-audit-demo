@@ -26,14 +26,13 @@ display_df = df.drop(columns=["res", "abs_res"], axis=1).reset_index(drop=True)
 display_df.rename(columns={"model_pred": "Model Prediction", "mape": "Error (%)"}, inplace=True)
 num_vars = display_df.select_dtypes(include=['int64','float64']).columns.tolist()
 
-st.header("Variable comparison")
 st.subheader("Select Model Features")
 
-x_var = st.selectbox(label="X variable", 
+x_var = st.selectbox(label="X axis", 
              options=num_vars,
              index=4)
 
-y_var = st.selectbox(label="Y variable", 
+y_var = st.selectbox(label="Y axis", 
              options=num_vars,
              index=5)
 st.subheader("Model Estimation Profiling")

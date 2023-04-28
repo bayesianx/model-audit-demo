@@ -111,15 +111,15 @@ display_df.rename(columns={"model_pred": "Model Prediction", "mape": "Error (%)"
 num_vars = display_df.select_dtypes(include=['int64','float64']).columns.tolist()[:-1]
 
 st.markdown("""---""")
-st.header("Model Risk Heatmap by Feature")
+st.header("Model Risk Heatmap")
 st.write("")
 st.subheader("Select Model Features")
 
-x_var = st.selectbox(label="X variable", 
+x_var = st.selectbox(label="X axis", 
              options=num_vars,
              index=4)
 
-y_var = st.selectbox(label="Y variable", 
+y_var = st.selectbox(label="Y axis", 
              options=num_vars,
              index=3)
 
