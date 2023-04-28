@@ -110,7 +110,7 @@ num_vars = display_df.select_dtypes(include=['int64','float64']).columns.tolist(
 st.markdown("""---""")
 st.header("Model Risk Heatmap by Feature")
 st.write("")
-st.subheader("Select Two Features")
+st.subheader("Select Model Features")
 
 x_var = st.selectbox(label="X variable", 
              options=num_vars,

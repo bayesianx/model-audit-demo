@@ -253,6 +253,7 @@ class SHAPEvaluator:
                             fcc.set_color(positive_color)
                         elif (matplotlib.colors.to_hex(fcc.get_color()) == default_neg_color):
                             fcc.set_color(negative_color)
+
             st.pyplot(fig)
     
     def plot_feature_importance(self, y):

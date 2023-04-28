@@ -25,7 +25,7 @@ display_df.rename(columns={"model_pred": "Model Prediction", "mape": "Error (%)"
 num_vars = display_df.select_dtypes(include=['int64','float64']).columns.tolist()
 
 st.header("Variable comparison")
-st.subheader("Select Two Features")
+st.subheader("Select Model Features")
 
 x_var = st.selectbox(label="X variable", 
              options=num_vars,
@@ -34,7 +34,7 @@ x_var = st.selectbox(label="X variable",
 y_var = st.selectbox(label="Y variable", 
              options=num_vars,
              index=5)
-
+st.subheader("Model Estimation Profiling")
 px_scatter(display_df, x_var, y_var)
 
 rownum = st.number_input(label="Please insert observation number to inspect",
@@ -42,4 +42,5 @@ rownum = st.number_input(label="Please insert observation number to inspect",
                          max_value=display_df.shape[0],
                          value=0)
 
+st.subheader("Model Estimation Drill-Down")
 explainer.waterfall(n_sample=rownum)
