@@ -7,6 +7,8 @@ from functionalities.plot_data import *
 st.set_page_config(layout="wide", 
                    page_title="Explainability", 
                    page_icon=":mag:")
+st.sidebar.image("./icons/logo.png", use_column_width=True)
+
 add_page_title()
 
 # load data
