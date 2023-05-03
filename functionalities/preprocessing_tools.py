@@ -1,4 +1,4 @@
-from ordered_set import OrderedSet
+# from ordered_set import OrderedSet
 
 def remove_weird(df, val):
     id = df[df.isin([val]).any(1)].index
@@ -42,11 +42,11 @@ def element_remover(l, *elements):
         except ValueError:
             pass
 
-def simplify_features(features):
-    """
-    Process feature names and simplify them
-    """
-    return list(OrderedSet([x.split('_')[0] if '_' in x else x for x in features]))
+# def simplify_features(features):
+#     """
+#     Process feature names and simplify them
+#     """
+#     return list(OrderedSet([x.split('_')[0] if '_' in x else x for x in features]))
 
 def to_discrete(df, vars, n_bins='auto'):
     """
