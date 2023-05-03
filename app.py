@@ -109,27 +109,30 @@ with right_column:
 display_df = df.drop(columns=["res", "abs_res"], axis=1).reset_index(drop=True)
 display_df.rename(columns={"model_pred": "Model Prediction", "mape": "Error (%)"}, inplace=True)
 num_vars = display_df.select_dtypes(include=['int64','float64']).columns.tolist()[:-1]
+num_vars = ["weight", "acceleration", "Y", "Model Prediction"]
+# num_vars.remove("displacement")
 
 st.markdown("""---""")
 st.header("Model Risk Heatmap")
 st.write("")
 st.subheader("Select Model Features")
 
-x_var = st.selectbox(label="X axis", 
-             options=num_vars,
-             index=4)
 
-y_var = st.selectbox(label="Y axis", 
+x_var = st.selectbox(label="X axis", 
              options=num_vars,
              index=3)
 
-heatmap_num(display_df, x_var, y_var)
+y_var = st.selectbox(label="Y axis", 
+             options=num_vars,
+             index=2)
 
-# try:
-#     heatmap_num(display_df, x_var, y_var)
+# heatmap_num(display_df, x_var, y_var)
+
+try:
+    heatmap_num(display_df, x_var, y_var)
     
-# except ValueError:
-#     st.write("Please select two distinct variables")
+except ValueError:
+    st.write("Please select two distinct variables")
 
 
 
