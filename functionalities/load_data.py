@@ -10,6 +10,7 @@ from sklearn.preprocessing import RobustScaler, OneHotEncoder
 import xgboost as xgb
 
 def load_data():
+    """ Function to load data from file and preprocess it"""
     # load data from file
     X_train = pd.read_csv('./regression_data/X_train.csv', sep=';', index_col=0)
     y_train = pd.read_csv('./regression_data/y_train.csv', sep=';', index_col=0)
@@ -17,8 +18,8 @@ def load_data():
     y_test = pd.read_csv('./regression_data/y_test.csv', sep=';', index_col=0)
     df = pd.read_csv('./regression_data/all_data.csv', sep=';', index_col=0)
     model1 = joblib.load('./regression_data/lr_model1.joblib')
-    # preprocess data
 
+    # preprocess data
     y_name = 'mpg'
     df.rename(columns = {y_name:'Y'}, inplace = True)
     to_category(df, 'model year', 'origin', 'cylinders')
@@ -63,6 +64,18 @@ def fit_encoder(X_train):
     return preprocessor
 
 def fit_model(df, X_train):
+    """Function to fit model to data
+    
+    Parameters:
+    df (pd.DataFrame): dataframe with all data
+    X_train (pd.DataFrame): dataframe with training data
+    
+    Returns:
+    X_train_proc (pd.DataFrame): dataframe with training data after preprocessing
+    y_train_res (pd.DataFrame): dataframe with residuals of training data
+    BSTR (xgb.XGBRegressor): fitted model
+    
+    """
     # Define input and output matrices
     INPUTS = X_train.columns.tolist()
     OUTPUT = 'res'

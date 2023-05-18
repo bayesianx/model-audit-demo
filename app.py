@@ -126,8 +126,6 @@ y_var = st.selectbox(label="Y axis",
              options=num_vars,
              index=2)
 
-# heatmap_num(display_df, x_var, y_var)
-
 try:
     heatmap_num(display_df, x_var, y_var)
     

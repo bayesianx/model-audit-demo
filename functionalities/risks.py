@@ -2,6 +2,10 @@ import numpy as np
 import pandas as pd
 import matplotlib
 import matplotlib.pyplot as plt
+import matplotlib.colors as colors
+from matplotlib.ticker import PercentFormatter
+from sklearn.neighbors import KernelDensity
+import gc
 import shap
 import streamlit as st
 
@@ -45,22 +49,16 @@ class KDE:
             number of bins for the histogram. Default value is 10
 
         """
-        from sklearn.neighbors import KernelDensity
-        import gc
-        
         plt.rcParams['axes.facecolor'] = 'white'
         fig, ax = plt.subplots(figsize = (15, 7))
-        # plt.figure(figsize = (15, 7))
-        # plt.grid(visible=False)
         ax.grid(visible=False)
 
         x = np.linspace(self.res.min(), self.res.max(), 1000)[:, np.newaxis]
 
         # Plot the data using a normalized histogram
-    
         plt.hist(self.res, bins=nbins, density=True, label=plotname, color='#92c5de', alpha=1)
 
-        # Do kernel density estimation
+        # Perform kernel density estimation
         kd = KernelDensity(kernel='gaussian', bandwidth=bandwidth).fit(self.res.values[:, np.newaxis])
         self.kd = kd
 
@@ -80,7 +78,6 @@ class KDE:
         plt.xlabel("Expected Error (%)", fontsize=15)
         plt.ylabel('Probability Distribution', fontsize=15)
         plt.legend(loc='upper right', fontsize=12)
-        from matplotlib.ticker import PercentFormatter
         fmt_percent = PercentFormatter(xmax=1.0, decimals=0)
         ax.xaxis.set_major_formatter(fmt_percent)
         return fig
@@ -140,28 +137,24 @@ class SHAPEvaluator:
         self.shap_values = shap_values
 
     def summary_plot(self):
-        # summary plot 
-
-        import matplotlib.pyplot as plt
-        import matplotlib.colors as colors
+        # summary plot         
         fig, ax = plt.subplots() 
         ax.grid(visible=False)
         ax.set_facecolor("white")
 
+        # custom colors
         color1 = '#444444'
         color2 = '#2F94B3'
         
         # Create a custom colormap that is a gradient between the two colors
         cmap = colors.LinearSegmentedColormap.from_list('custom_cmap', [(0, color1), (1, color2)])
 
-        # plot_size=(12,5)
         shap.summary_plot(self.shap_values, self.X_enc, cmap = cmap, show = False, max_display=10) 
         plt.gca().spines['bottom'].set_color('black')
         plt.gca().spines['bottom'].set_linewidth(1.5)
         plt.gca().spines['left'].set_color('black')
         plt.gca().spines['left'].set_linewidth(2)
         plt.xlabel("Impact on Model Error", fontsize = 15)
-        # plt.title("Impact on Error by Feature", x = 0.45, y = 1.01, fontsize = 15, style='italic', pad = 2 )
         st.pyplot(fig)
         
     
@@ -186,6 +179,8 @@ class SHAPEvaluator:
         return df_feature_importance
     
     def waterfall_bar(self, n_sample):
+        """Waterfall plot (using bars)"""
+
         fig, ax = plt.subplots(figsize=(12, 7))
         ax.grid(visible=False)
         ax.set_facecolor("white")
@@ -219,45 +214,45 @@ class SHAPEvaluator:
         st.pyplot(fig)
 
     def waterfall(self, n_sample):
-            import matplotlib
-            import matplotlib.pyplot as plt
-            fig, ax = plt.subplots(figsize=(12, 7))
-            ax.grid(visible=False)
-            ax.set_facecolor("white")
-            plt.gca().spines['bottom'].set_color('black')
-            plt.gca().spines['bottom'].set_linewidth(1.5)
-            plt.gca().spines['left'].set_color('black')
-            plt.gca().spines['left'].set_linewidth(2)
+        """Waterfall plot"""
 
-            # Default SHAP colors
-            default_pos_color = "#ff0051"
-            default_neg_color = "#008bfb"
-            # Custom colors
-            positive_color = "#2F94B3" 
-            negative_color = "#444444"
+        fig, ax = plt.subplots(figsize=(12, 7))
+        ax.grid(visible=False)
+        ax.set_facecolor("white")
+        plt.gca().spines['bottom'].set_color('black')
+        plt.gca().spines['bottom'].set_linewidth(1.5)
+        plt.gca().spines['left'].set_color('black')
+        plt.gca().spines['left'].set_linewidth(2)
 
-            f = shap.plots.waterfall(self.shap_values[n_sample], show = False)
-            # Change the colormap of the artists
-            for fc in plt.gcf().get_children():
-                for fcc in fc.get_children():
-                    if (isinstance(fcc, matplotlib.patches.FancyArrow)):
-                        if (matplotlib.colors.to_hex(fcc.get_facecolor()) == default_pos_color):
-                            fcc.set_facecolor(positive_color)
-                            fcc.set_edgecolor(positive_color)
-                        elif (matplotlib.colors.to_hex(fcc.get_facecolor()) == default_neg_color):
-                            fcc.set_color(negative_color)
-                            fcc.set_edgecolor(negative_color)
+        # Default SHAP colors
+        default_pos_color = "#ff0051"
+        default_neg_color = "#008bfb"
+        # Custom colors
+        positive_color = "#2F94B3" 
+        negative_color = "#444444"
 
-                    elif (isinstance(fcc, plt.Text)):
-                        if (matplotlib.colors.to_hex(fcc.get_color()) == default_pos_color):
-                            fcc.set_color(positive_color)
-                        elif (matplotlib.colors.to_hex(fcc.get_color()) == default_neg_color):
-                            fcc.set_color(negative_color)
+        f = shap.plots.waterfall(self.shap_values[n_sample], show = False)
 
-            st.pyplot(fig)
+        # Change the colormap of the artists
+        for fc in plt.gcf().get_children():
+            for fcc in fc.get_children():
+                if (isinstance(fcc, matplotlib.patches.FancyArrow)):
+                    if (matplotlib.colors.to_hex(fcc.get_facecolor()) == default_pos_color):
+                        fcc.set_facecolor(positive_color)
+                        fcc.set_edgecolor(positive_color)
+                    elif (matplotlib.colors.to_hex(fcc.get_facecolor()) == default_neg_color):
+                        fcc.set_color(negative_color)
+                        fcc.set_edgecolor(negative_color)
+                elif (isinstance(fcc, plt.Text)):
+                    if (matplotlib.colors.to_hex(fcc.get_color()) == default_pos_color):
+                        fcc.set_color(positive_color)
+                    elif (matplotlib.colors.to_hex(fcc.get_color()) == default_neg_color):
+                        fcc.set_color(negative_color)
+        st.pyplot(fig)
     
     def plot_feature_importance(self, y):
-        import matplotlib
+        """Plot feature importance"""
+
         # get top features ordered by importance
         default_pos_color = "#ff0051" 
         default_neg_color = "#008bfb" 
@@ -272,7 +267,9 @@ class SHAPEvaluator:
         plt.gca().spines['bottom'].set_linewidth(1.5)
         plt.gca().spines['left'].set_color('black')
         plt.gca().spines['left'].set_linewidth(2)
+
         f = shap.plots.bar(self.shap_values, max_display = 10, show = False) 
+
         # Change the colormap of the artists 
         for fc in plt.gcf().get_children(): 
             for fcc in fc.get_children()[:-1]: 
@@ -289,6 +286,6 @@ class SHAPEvaluator:
 
                     elif (matplotlib.colors.to_hex(fcc.get_color()) == default_neg_color): 
                         fcc.set_color(negative_color) 
+
         plt.xlabel("Mean Impact on Error", fontsize = 15)
-        # plt.title("Feature Importance", x = 0.45, y = 1.01, fontsize = 15, style='italic', pad = 2 )
         st.pyplot(fig)
